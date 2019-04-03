@@ -1,0 +1,23 @@
+{
+  "name": "nodejs_tanaline",
+  "version": "0.0.0",
+  "description": "LINE Bot with Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"[ERROR]: No test specified.\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanacchi/nodejs_tanaline.git"
+  },
+  "keywords": [
+    "LINE",
+    "BOT"
+  ],
+  "author": "tanacchi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tanacchi/nodejs_tanaline/issues"
+  },
+  "homepage": "https://github.com/tanacchi/nodejs_tanaline#readme"
+}
