@@ -11,6 +11,12 @@ const server     = express();
 
 server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   res.sendStatus(200);
+
+  for (const event of req.body.events) {
+    if (event.type == "message") {
+      lineClient.replyMessage(event.replyToken, {type: "text", text: "Hello"});
+    }
+  }
 });
 
 server.listen(process.env.PORT || 8000);
