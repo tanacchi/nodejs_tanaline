@@ -17,7 +17,11 @@ server.post("/webhook", line.middleware(lineConfig), (req, res) => {
       lineClient.getProfile(event.source.userId)
         .then((profile) => {
           const publisher_name = profile.displayName;
+          console.log(`publisher_id: ${event.source.userId}`);
           console.log(`publisher_name: ${publisher_name}`);
+          if (event.message.type == "text") {
+            console.log(`message content: ${event.message.text}`);
+          }
           if (publisher_name == process.env.HIYORI_USER_NAME) {
             lineClient.replyMessage(event.replyToken, {type: "text", text: "あいあいよちよち"});
           } else {
