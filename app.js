@@ -14,16 +14,20 @@ server.post("/webhook", line.middleware(lineConfig), (req, res) => {
 
   for (const event of req.body.events) {
     if (event.type == "message") {
-      lineClient.getProfile(event.source.userId)
+      const use_id = event.source.userId;
+      lineClient.getProfile(use_id)
         .then((profile) => {
           const publisher_name = profile.displayName;
-          console.log(`publisher_id: ${event.source.userId}`);
-          console.log(`publisher_name: ${publisher_name}`);
+          console.log(`publisher id: ${use_id}`);
+          console.log(`publisher name: ${publisher_name}`);
           if (event.message.type == "text") {
             console.log(`message content: ${event.message.text}`);
           }
-          if (publisher_name == process.env.HIYORI_USER_NAME) {
+          if (use_id == process.env.HIYORI_USER_ID) {
             lineClient.replyMessage(event.replyToken, {type: "text", text: "あいあいよちよち"});
+          } else if (use_id == process.env.TANACCHI_USER_ID) {
+            lineClient.pushMessage(process.env.HIYORI_USER_ID, {type: "text", text: event.message.text}); 
+            lineClient.replyMessage(event.replyToken, {type: "text", text: "Message was send"});
           } else {
             lineClient.replyMessage(event.replyToken, {type: "text", text: "Hello"});
           }
