@@ -4,6 +4,7 @@
   "description": "LINE Bot with Node.js",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"[ERROR]: No test specified.\" && exit 1"
   },
   "repository": {
