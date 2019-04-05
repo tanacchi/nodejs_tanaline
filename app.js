@@ -31,6 +31,8 @@ const detectUserKind = (userId) => {
 };
 
 const messageCallback = (messageEvent) => {
+  if (messageEvent.source.type != "user") return;
+
   const userId = messageEvent.source.userId;
   lineClient.getProfile(userId)
     .then((profile) => {
@@ -57,6 +59,22 @@ const messageCallback = (messageEvent) => {
 };
 
 //
+//  Functions for "memberJoined" event
+//
+
+const memberJoinedCallback = (memberJoinedEvent) => {
+  for (const member of memberJoinedEvent.joined.members) {
+    lineClient.getProfile(member.userId)
+      .then((profile) => {
+        lineClient.replyMessage(memberJoinedEvent.replyToken, {
+          type: "text",
+          text: `Welcome, ${profile.displayName} !`
+        });
+      });
+  }
+};
+
+//
 //  Request managers
 //
 
@@ -66,6 +84,9 @@ server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   for (const event of req.body.events) {
     if (event.type == "message") {
       messageCallback(event);
+    }
+    else if (event.type == "memberJoined") {
+      memberJoinedCallback(event);
     }
   }
 });
