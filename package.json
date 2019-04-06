@@ -23,6 +23,7 @@
   "homepage": "https://github.com/tanacchi/nodejs_tanaline#readme",
   "dependencies": {
     "@line/bot-sdk": "^6.6.0",
+    "canvas": "^2.4.1",
     "express": "^4.16.4"
   }
 }
