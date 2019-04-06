@@ -72,6 +72,19 @@ class Board {
     }
     return false;
   }
+
+  toString() {
+    let text = "   1 2 3 4 5 6 7 8 \n"
+             + "-------------------\n";
+    for (let y = 0; y < this.size; ++y) {
+      text += (y+1) + " |";
+      for (let x = 0; x < this.size; ++x) {
+        text += `${this.getStone(x, y)}|`
+      }
+      text += "\n-------------------\n";
+    }
+    return text;
+  }
 }
 
 
@@ -89,7 +102,7 @@ if (require.main === module) {
     console.log(`x: ${x}, y: ${y}, stone: '${stone}'`);
 
     if (board.setStone(x, y, stone)) {
-      board.show();
+      console.log(board.toString());
       ++turn;
     }
   }
