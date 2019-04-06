@@ -12,12 +12,14 @@ class Board {
   }
 
   show() {
+    console.log("================");
     for (let col = 0; col < this.size; ++col) {
       for (let row = 0; row < this.size; ++row) {
         process.stdout.write(`${this.data[col*this.size + row]} `);
       }
       process.stdout.write('\n');
     }
+    console.log("================");
   }
 
   inRange(x, y) {
@@ -33,14 +35,18 @@ class Board {
   }
 
   setStone(x, y, stone) {
-    if (!this.inRange(x, y)) throw {x: x, y: y};
+    if (!this.inRange(x, y) || this.getStone(x, y) != Stone.Space)
+      return false;
     const index = this.getAccessNum(x, y);
     this.data[index] = stone;
+    return true;
   }
 
   getLengthOfLine(x, y, dir) {
     const activeStone = this.getStone(x, y);
-    for (let length = 1; this.inRange(x+dir.x*length, y+dir.y*length); ++length) {
+    if (activeStone == Stone.Space) return 0;
+    let length = 1;
+    for (; this.inRange(x+dir.x*length, y+dir.y*length); ++length) {
       const targetStone = this.getStone(x+dir.x*length, y+dir.y*length);
       if (targetStone != activeStone) break;
     }
@@ -48,8 +54,10 @@ class Board {
   }
 
   isGameover() {
-    if (this.data.indexOf(Stone.Space) == -1) 
+    if (this.data.indexOf(Stone.Space) == -1) {
+      console.log("We can't put stone any more.");
       return true;
+    }
 
     const dirs = [
       {x: 1, y: 0}, 
@@ -70,8 +78,19 @@ class Board {
 if (require.main === module) {
   const board = new Board(8);  
   board.show();
+  
+  let turn = 1;
+  while (!board.isGameover()) {
+    console.log(`turn: ${turn}`);
 
-  board.setStone(2, 3, Stone.White);
-  board.setStone(5, 1, Stone.Black);
-  board.show();
+    const x = Math.floor(Math.random() * 8);
+    const y = Math.floor(Math.random() * 8);
+    const stone = (turn % 2) == 0 ? Stone.White : Stone.Black;
+    console.log(`x: ${x}, y: ${y}, stone: '${stone}'`);
+
+    if (board.setStone(x, y, stone)) {
+      board.show();
+      ++turn;
+    }
+  }
 }
