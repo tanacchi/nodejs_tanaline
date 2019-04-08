@@ -90,4 +90,3 @@ server.post("/webhook", line.middleware(lineConfig), (req, res) => {
     }
   }
 });
-
