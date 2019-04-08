@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const Stone = {
   Space: ' ', Black: 'O', White: 'X'
 };
@@ -84,6 +86,19 @@ class Board {
       text += "\n-------------------\n";
     }
     return text;
+  }
+
+  saveProgress(dirname) {
+    let content = `width: ${this.width}\nheight: ${this.height}\n`;
+    this.data.forEach((elem) => {
+      if ()
+    });
+    fs.writeFile(dirname, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      } 
+    });
   }
 }
 
