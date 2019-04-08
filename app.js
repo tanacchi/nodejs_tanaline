@@ -70,7 +70,10 @@ const memberJoinedCallback = (memberJoinedEvent) => {
           type: "text",
           text: `Welcome, ${profile.displayName} !`
         });
-      });
+      })
+    .catch((err) => {
+      console.log(`[ERROR]: ${err}`);
+    });
   }
 };
 
