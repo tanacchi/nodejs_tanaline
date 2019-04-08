@@ -1,6 +1,7 @@
 const express = require("express");
 const line    = require("@line/bot-sdk");
 const os      = require("os");
+const geoip   = require("geoip-lite");
 
 const lineConfig = {
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -35,5 +36,9 @@ server.post("/webhook", line.middleware(lineConfig), (req, res) => {
       // ++alias;
     // });
   // });
-  console.log(ifaces.eth0[0].address);
+  const ipaddress = ifaces.eth0[0].address;
+  console.log(ipaddress);
+
+  const geo = geoip.lookup(ipaddress);
+  console.log(geo);
 });
