@@ -31,31 +31,48 @@ const detectUserKind = (userId) => {
 };
 
 const messageCallback = (messageEvent) => {
-  if (messageEvent.source.type != "user") return;
-
-  const userId = messageEvent.source.userId;
-  lineClient.getProfile(userId)
-    .then((profile) => {
-      const publisherName = profile.displayName;
-      console.log(`publisher id: ${userId}`);
-      console.log(`publisher name: ${publisherName}`);
-      if (messageEvent.message.type == "text") {
-        console.log(`message content: ${messageEvent.message.text}`);
-      }
-      const userKind = detectUserKind(userId);
-      switch (userKind)
-      {
-        case UserKind.Hiyori:
-          lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "あいあいよちよち"});
-          break;
-        case UserKind.Tanacchi:
-          lineClient.pushMessage(process.env.HIYORI_USER_ID, {type: "text", text: messageEvent.message.text}); 
-          lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "Message was sent."});
-          break;
-        default:
-          lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "Hello"});
-      }
-    });
+  if (messageEvent.source.type == "user") {
+    const userId = messageEvent.source.userId;
+    lineClient.getProfile(userId)
+      .then((profile) => {
+        const publisherName = profile.displayName;
+        console.log(`publisher id: ${userId}`);
+        console.log(`publisher name: ${publisherName}`);
+        if (messageEvent.message.type == "text") {
+          console.log(`message content: ${messageEvent.message.text}`);
+        }
+        const userKind = detectUserKind(userId);
+        switch (userKind)
+        {
+          case UserKind.Hiyori:
+            lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "あいあいよちよち"});
+            break;
+          case UserKind.Tanacchi:
+            lineClient.pushMessage(process.env.HIYORI_USER_ID, {type: "text", text: messageEvent.message.text}); 
+            lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "Message was sent."});
+            break;
+          default:
+            lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "Hello"});
+        }
+      });
+  }
+  else {
+    if (messageEvent.message.type == "text" && messageEvent.message.text == "たなライン、退出願うぞ") {
+      // const keyForId = messageEvent.source.type == "group" ? "groupId" : "roomId";
+      // const targetId = messageEvent.source[keyForId];
+      lineClient.replyMessage(messageEvent.replyToken, {type: "text", text: "うむ、承知したぞ。"})
+        .then(() => {
+          if (messageEvent.source.type == "group") {
+            const groupId = messageEvent.source.groupId;
+            lineClient.leaveGroup(groupId);
+          }
+          else {
+            const roomId = messageEvent.source.roomId;
+            lineClient.leaveRoom(roomId);
+          }
+        });
+    }
+  }
 };
 
 //
