@@ -28,7 +28,7 @@ server.post("/webhook", line.middleware(lineConfig), (req, res) => {
             for (const row of result.rows) {
               messages.push({type: "text", text: row.message});
             }
-            lineClient.replyMessage(event.replyToken, messages);
+            lineClient.replyMessage(event.replyToken, messages.slice(-5));
           });
         });
       }
