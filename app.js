@@ -16,7 +16,7 @@ const server     = express();
 server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   res.sendStatus(200);
   pool.connect((err, client, done) => {
-    client.query("SELECT NOW()", (err, result) => {
+    client.query("SELECT * FROM talk", (err, result) => {
       done();
       console.log(result);
     });
