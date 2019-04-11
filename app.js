@@ -1,7 +1,7 @@
 const express = require("express");
 const line    = require("@line/bot-sdk");
 const pg      = require("pg");
-const config  = require("./config");
+const config  = require("./config.json");
 
 const pool = new pg.Pool(config.db.postgres);
 
@@ -16,15 +16,9 @@ const server     = express();
 server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   res.sendStatus(200);
   pool.connect((err, client, done) => {
-    client.query(query, param, (err, result) => {
+    client.query("SELECT NOW()", (err, result) => {
       done();
-      if(err) {
-        callback(err);
-      }
-      else {
-        console.log("sql: " + query + ", param: " + param + ", count:" + result.rowCount);
-        callback(null, result);
-      }
+      console.log(result);
     });
   });
 });
