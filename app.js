@@ -1,7 +1,7 @@
 const express = require("express");
 const line    = require("@line/bot-sdk");
 const pg      = require("pg");
-const config  = require("config");
+const config  = require("./config");
 
 const pool = new pg.Pool(config.db.postgres);
 
