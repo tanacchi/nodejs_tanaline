@@ -15,6 +15,20 @@ const server     = express();
 
 server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   res.sendStatus(200);
+  for (const event of req.body.events) {
+    if (event.source.type == "user"
+        && event.type == "message" 
+        && event.message.type == "text") {
+      pool.connect((err, client, done) => {
+        const query = "INSERT INTO talk (user_id, message) VALUES ("
+                      +"'"+event.source.userId+"', '"+event.message.text+"');";
+        console.log("query: " + query);
+        client.query(query, (err, result) => {
+          done();
+        });
+      });
+    }
+  }
   pool.connect((err, client, done) => {
     client.query("SELECT * FROM talk", (err, result) => {
       done();
