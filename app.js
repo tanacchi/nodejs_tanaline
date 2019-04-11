@@ -16,25 +16,37 @@ const server     = express();
 server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   res.sendStatus(200);
   for (const event of req.body.events) {
-    if (event.source.type == "user"
-        && event.type == "message" 
-        && event.message.type == "text") {
-      pool.connect((err, client, done) => {
-        const query = "INSERT INTO talk (user_id, message) VALUES ("
-                      +"'"+event.source.userId+"', '"+event.message.text+"');";
-        console.log("query: " + query);
-        client.query(query, (err, result) => {
-          done();
+    if (event.source.type == "user" && event.type == "message" && event.message.type == "text") {
+      if (event.message.text == "履歴") {
+        pool.connect((err, client, done) => {
+          const query = "SELECT * FROM talk WHERE user_id = '"+event.source.userId+"';";
+          console.log("query: " + query);
+          client.query(query, (err, result) => {
+            console.log(result);
+            done();
+            let messages = [];
+            for (const row of result.rows) {
+              messages.push({type: "text", text: row.message});
+            }
+            lineClient.replyMessage(event.replyToken, messages);
+          });
         });
-      });
+      }
+      else {
+        pool.connect((err, client, done) => {
+          const query = "INSERT INTO talk (user_id, message) VALUES ("
+            +"'"+event.source.userId+"', '"+event.message.text+"');";
+          console.log("query: " + query);
+          client.query(query, (err, result) => {
+            done();
+            if (!err) {
+              lineClient.replyMessage(event.replyToken, {type: "text", text: "記録しました。"});
+            }
+          });
+        });
+      }
     }
   }
-  pool.connect((err, client, done) => {
-    client.query("SELECT * FROM talk", (err, result) => {
-      done();
-      console.log(result);
-    });
-  });
 });
 
 server.listen(process.env.PORT || 8000);
