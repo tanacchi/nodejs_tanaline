@@ -57,6 +57,7 @@ const messageCallback = (messageEvent) => {
       });
   }
   else {
+      console.log("groupID:" + messageEvent.source.groupId);
     if (messageEvent.message.type == "text" && messageEvent.message.text == "たなライン、退出願うぞ") {
       // const keyForId = messageEvent.source.type == "group" ? "groupId" : "roomId";
       // const targetId = messageEvent.source[keyForId];
