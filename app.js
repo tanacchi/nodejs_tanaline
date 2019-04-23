@@ -146,14 +146,13 @@ const memberLeftCallback = (memberLeftEvent) => {
             type: "text",
             text: replyString2
           },
-          // {
-            // type: "image",
-            // originalContentUrl: userImageUrl,
-            // previewImageUrl: userImageUrl
-          // }
+          {
+            type: "image",
+            originalContentUrl: userImageUrl,
+            previewImageUrl: userImageUrl
+          }
         ];
-        console.log(replyMessages);
-        lineClient.replyMessage(memberLeftEvent.replyToken, replyMessages);
+        lineClient.pushMessage(process.env.PROKEN_GROUP_ID, replyMessages);
       });
   }
 };
