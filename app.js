@@ -72,6 +72,36 @@ const messageCallback = (messageEvent) => {
           }
         });
     }
+    else if (messageEvent.message.type == "sticker")
+    {
+      const stickers = [
+        {packageId: 11537, stickerId: 52002738},
+        {packageId: 11537, stickerId: 52002741},
+        {packageId: 11537, stickerId: 52002763},
+        {packageId: 11537, stickerId: 52002756},
+        {packageId: 11537, stickerId: 52002757},
+        {packageId: 11537, stickerId: 5200277},
+        {packageId: 11537, stickerId: 52002766},
+        {packageId: 11538, stickerId: 51626513},
+        {packageId: 11538, stickerId: 51626519},
+        {packageId: 11538, stickerId: 51626527},
+        {packageId: 11538, stickerId: 51626518},
+        {packageId: 11538, stickerId: 51626505},
+        {packageId: 11538, stickerId: 51626506},
+        {packageId: 11538, stickerId: 52114123},
+        {packageId: 11539, stickerId: 52114116},
+        {packageId: 11539, stickerId: 52114141},
+        {packageId: 11539, stickerId: 52114122},
+        {packageId: 11539, stickerId: 52114137},
+        {packageId: 11539, stickerId: 52114138}
+      ];
+      const reply_sticker = stickers[Math.floor(Math.random()*stickers.length)];
+      lineClient.replyMessage(messageEvent.replyToken, {
+        type: "sticker",
+        packageId: reply_sticker.packageId,
+        stickerId: reply_sticker.stickerId
+      });
+    }
   }
 };
 
