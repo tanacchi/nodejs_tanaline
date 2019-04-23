@@ -125,18 +125,58 @@ const memberJoinedCallback = (memberJoinedEvent) => {
 };
 
 //
+//  Functions for "memberLeft" event
+//
+
+const memberLeftCallback = (memberLeftEvent) => {
+  for (const member of memberLeftEvent.left.members)
+  {
+    lineClient.getProfile(member.userId)
+      .then((profile) => {
+        const replyString1 = profile.displayName + "さん，さようなら... (; ;)";
+        const replyString2 = "ひとことは「" + profile.statusMessage + "」でした";
+        const userImageUrl = profile.pictureUrl;
+        const replyMessages = [
+          {
+            type: "text",
+            text: replyString1
+          },
+          {
+            type: "text",
+            text: replyString2
+          },
+          // {
+            // type: "image",
+            // originalContentUrl: userImageUrl,
+            // previewImageUrl: userImageUrl
+          // }
+        ];
+        console.log(replyMessages);
+        lineClient.replyMessage(memberLeftEvent.replyToken, replyMessages);
+      });
+  }
+};
+
+//
 //  Request managers
 //
 
 server.post("/webhook", line.middleware(lineConfig), (req, res) => {
   res.sendStatus(200);
 
-  for (const event of req.body.events) {
-    if (event.type == "message") {
+  for (const event of req.body.events) 
+  {
+    if (event.type == "message") 
+    {
       messageCallback(event);
     }
-    else if (event.type == "memberJoined") {
+    else if (event.type == "memberJoined")
+    {
       memberJoinedCallback(event);
+    }
+    else if (event.type == "memberLeft")
+    {
+      memberLeftCallback(event);
     }
   }
 });
